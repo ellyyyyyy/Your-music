@@ -1,0 +1,116 @@
+@import "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap";
+
+html {
+  font-family: sans-serif;
+}
+
+body {
+  font-family: "Inter";
+  font-size: 18px;
+  color: #fff;
+  background-color: #0e0e0e;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("../images/top-bg-2.png"),
+    url("../images/footer-bg.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: top left, bottom left;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1350px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
+}
+
+.header {
+  margin-top: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 115px;
+  transition: 0.3s ease all;
+  position: fixed;
+  width: 100%;
+  z-index: 99;
+}
+
+.fixed {
+  width: 100%;
+  top: 0;
+  left: 0;
+  margin-top: 0;
+}
+
+.fixed #inner-header {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#inner-header {
+  margin-left: auto;
+  margin-right: auto;
+  transition: 0.4s ease all;
+  height: 100%;
+  border-radius: 20px;
+  max-width: 1350px;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+}
+
+#inner-header .wrap {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 10px;
+}
+
+#inner-header .logo {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  margin-right: 10px;
+}
+
+#inner-header .logo img {
+  height: 43px;
+}
+
+.header-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.header-menu li {
+  background-color: rgba(255, 255, 255, 0.03);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-menu a {
+  color: #fff !important;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
