@@ -487,3 +487,68 @@ span.item-artist-nickname {
   font-weight: 600;
   letter-spacing: -1.3px;
 }
+
+.add-artist {
+  margin-top: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-artist button {
+  width: 350px;
+  max-width: 100%;
+  color: #444;
+  padding: 5px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #555;
+}
+
+.artist-name {
+  width: 350px;
+  max-width: 100%;
+  color: #444;
+  padding: 5px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #555;
+}
+
+input[type="file"] {
+  width: 350px;
+  max-width: 100%;
+  color: #444;
+  padding: 5px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #555;
+}
+
+input[type="file"]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: #2d2d2d;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #fff;
+  color: #2d2d2d;
+}
+
+.rate-song {
+  margin-top: 300px;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-value {
+  margin-left: 10px;
+}

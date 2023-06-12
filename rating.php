@@ -16,8 +16,8 @@
                 <ul class="header-menu">
                     <li><a href="/rating.php"><span>Рейтинг</span> </a></li>
                     <li><a href="/artists.php"><span>Артисты</span> </a></li>
-                    <li><a href="/add-artist"><span>Добавить артиста</span> </a></li>
-                    <li><a href="/rate-song"><span>Оценить трек</span> </a></li>
+                    <li><a href="/add-artist.php"><span>Добавить артиста</span> </a></li>
+                    <li><a href="/rate-song.php"><span>Оценить трек</span> </a></li>
                 </ul>
             </div>
         </div>
