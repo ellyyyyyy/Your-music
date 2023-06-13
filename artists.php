@@ -15,7 +15,7 @@
                 <a href="/" class="logo"><img src="fonts/logo.png" alt="ТВОЯ МУЗЫКА"></a>
                 <ul class="header-menu">
                     <li><a href="/rating.php"><span>Рейтинг</span> </a></li>
-                    <li><a href="/artists"><span>Артисты</span> </a></li>
+                    <li><a href="/artists.php"><span>Артисты</span> </a></li>
                     <li><a href="/add-artist.php"><span>Добавить артиста</span> </a></li>
                     <li><a href="/rate-song.php"><span>Оценить трек</span> </a></li>
                 </ul>
@@ -26,75 +26,43 @@
         <section class="artists-list">
             <div class="wrap">
                     <div class="home-artists-section-grid">
-                        <div class="card-wrapper card-artist card-artist">
-                            <img src="images/saluki.jpg" class="card-blur">
-                            <div class="card">
-                                <div class="card-image"><img src="images/saluki.jpg"></div>
-                                <div class="card-content">
-                                    <div class="card-header">
-                                        <div class="card-header-info">
-                                            <div class="card-title">SALUKI</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <?php
+                    // Подключение к базе данных
+                    include 'backend/connect.php';
+                    $db = new mysqli($host, $user, $passw, $db_name);
 
+                    // Получение списка артистов из таблицы "artists"
+                    $query = "SELECT * FROM artists";
+                    $result = $db->query($query);
 
-                        <div class="card-wrapper card-artist card-artist">
-                            <img src="images/saluki.jpg" class="card-blur">
-                            <div class="card">
-                                <div class="card-image"><img src="images/saluki.jpg"></div>
-                                <div class="card-content">
-                                    <div class="card-header">
-                                        <div class="card-header-info">
-                                            <div class="card-title">SALUKI</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-wrapper card-artist card-artist">
-                            <img src="images/saluki.jpg" class="card-blur">
-                            <div class="card">
-                                <div class="card-image"><img src="images/saluki.jpg"></div>
-                                <div class="card-content">
-                                    <div class="card-header">
-                                        <div class="card-header-info">
-                                            <div class="card-title">SALUKI</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-wrapper card-artist card-artist">
-                            <img src="images/saluki.jpg" class="card-blur">
-                            <div class="card">
-                                <div class="card-image"><img src="images/saluki.jpg"></div>
-                                <div class="card-content">
-                                    <div class="card-header">
-                                        <div class="card-header-info">
-                                            <div class="card-title">SALUKI</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-wrapper card-artist card-artist">
-                            <img src="images/saluki.jpg" class="card-blur">
-                            <div class="card">
-                                <div class="card-image"><img src="images/saluki.jpg"></div>
-                                <div class="card-content">
-                                    <div class="card-header">
-                                        <div class="card-header-info">
-                                            <div class="card-title">SALUKI</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $artistName = $row['name'];
+                            $artistId = $row['id'];
+                            $artistImage = "images/" . strtolower($artistName) . ".jpg"; // Формирование пути к изображению на основе имени автора
+                            echo '<a href="/backend/artist.php?id=' . $artistId . '">';
+                            // Вывод карточки артиста
+                            echo '<div class="card-wrapper card-artist card-artist">';
+                            echo '<img src="' . $artistImage . '" class="card-blur">';
+                            echo '<div class="card">';
+                            echo '<div class="card-image"><img src="' . $artistImage . '"></div>';
+                            echo '<div class="card-content">';
+                            echo '<div class="card-header">';
+                            echo '<div class="card-header-info">';
+                            echo '<div class="card-title">' . $artistName . '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</a>';
 
+                        }
+                    }
+
+                    // Закрытие соединения с базой данных
+                    $db->close();
+                    ?>
                     </div>
             </div>
         </section>

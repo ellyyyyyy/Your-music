@@ -28,7 +28,8 @@
     </header>
     <main>
     <div class="wrap">
-        <form class="rate-song" method="POST" action="backend/rete-song-code.php">
+        <form class="rate-song" method="POST" action="backend/rete-song-code.php" enctype="multipart/form-data">
+        <input name="image" type="file" id="images" accept="image/*" required>
         <h3>Выберите авторов:</h3>
         <select name="authors[]" class="select2" multiple>
             <?php
@@ -73,7 +74,8 @@
     <!-- Добавьте остальные ползунки здесь -->
   </div>
   <!-- Добавьте остальные ползунки здесь -->
-
+  <label for="releaseDate">Дата релиза:</label>
+    <input type="date" id="releaseDate" name="releaseDate"><br>
   <h3>Добавить песню:</h3>
   <label for="song">Название песни:</label>
   <input type="text" id="song" name="song"><br>

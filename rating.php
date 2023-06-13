@@ -25,69 +25,73 @@
     <main>
     <section class="rating-list">
         <div class="wrap">
-            <div class="rating-list-item rating-item-track">
-                <div class="rating-list-item-cover">
-                    <img src="images/Vadayom.jpg" alt="Vadayom">
-                </div>
-            <div class="item-track-names">
-                <div class="item-track">Vadayom</div>
-                <div class="item-artist">
-                    <a href="/artist/blago-white" class="item-artist-nickname">blago white</a>
-                </div>
-            </div>
-            <div class="rating-list-item-rating">88</div>
-            <div class="rating-details">
-                <span class="tranding-rating-value">5</span>
-                <span class="atmosphere-rating-value">5</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">9</span>
-            </div>
-            </div>
+        <?php
+            // Подключение к базе данных
+            include 'backend/connect.php';
+            $db = new mysqli($host, $user, $passw, $db_name);
 
+            // Запрос для получения оцененных песен
+            $query = "SELECT songs.artist_name AS artist_name, songs.name AS song_name, songs.result AS rating,
+                    MAX(evaluations.rhymes) AS rhymes, MAX(evaluations.structure) AS structure, MAX(evaluations.realization) AS realization,
+                    MAX(evaluations.charisma) AS charisma, MAX(evaluations.atmosphere) AS atmosphere, MAX(evaluations.trendiness) AS trendiness
+                    FROM songs
+                    INNER JOIN evaluations ON songs.id = evaluations.song
+                    GROUP BY songs.id";
 
-            <div class="rating-list-item rating-item-track">
-                <div class="rating-list-item-cover">
-                    <img src="images/Vadayom.jpg" alt="Vadayom">
-                </div>
-            <div class="item-track-names">
-                <div class="item-track">Vadayom</div>
-                <div class="item-artist">
-                    <a href="/artist/blago-white" class="item-artist-nickname">blago white</a>
-                </div>
-            </div>
-            <div class="rating-list-item-rating">88</div>
-            <div class="rating-details">
-                <span class="tranding-rating-value">5</span>
-                <span class="atmosphere-rating-value">5</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">9</span>
-            </div>
-            </div>
-            <div class="rating-list-item rating-item-track">
-                <div class="rating-list-item-cover">
-                    <img src="images/Vadayom.jpg" alt="Vadayom">
-                </div>
-            <div class="item-track-names">
-                <div class="item-track">Vadayom</div>
-                <div class="item-artist">
-                    <a href="/artist/blago-white" class="item-artist-nickname">blago white</a>
-                </div>
-            </div>
-            <div class="rating-list-item-rating">88</div>
-            <div class="rating-details">
-                <span class="tranding-rating-value">5</span>
-                <span class="atmosphere-rating-value">5</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">10</span>
-                <span class="base-rating-value">9</span>
-            </div>
-            </div>
+                    $result = $db->query($query);
 
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $songName = $row['song_name'];
+                            $artistNames = $row['artist_name'];
+                            $artistNames = explode(",", $artistNames);
+                            $query = 'SELECT * FROM artists WHERE id=' . $artistNames[0];
+                            foreach($artistNames as $id) {
+                                $query.= ' or id=' . $id;
+                            }
+                            $names_result = $db->query($query); 
+                            $artists_names = "";
+                            if ($names_result->num_rows > 0) {
+                                while ($artist = $names_result->fetch_assoc()) {
+                                    $artists_names.= $artist['name'] . ', ';
+                                }
+                            }
+                            $artists_names = mb_substr($artists_names, 0, strlen($artists_names) - 2);
+                            $rating = $row['rating'];
+                            $rhymes = $row['rhymes'];
+                            $structure = $row['structure'];
+                            $realization = $row['realization'];
+                            $charisma = $row['charisma'];
+                            $trendiness = $row['trendiness'];
+                            $atmosphere = $row['atmosphere'];
+                            // Вывод карточки оцененной песни
+
+                            echo '<div class="rating-list-item rating-item-track">';
+                            echo '<div class="rating-list-item-cover">';
+                            echo '<img src="images/' . $songName . '.jpg" alt="' . $songName . '">';
+                            echo '</div>';
+                            echo '<div class="item-track-names">';
+                            echo '<div class="item-track">' . $songName . '</div>';
+                            echo '<div class="item-artist">';
+                            echo '<p href="/">' . $artists_names . '</p>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '<div class="rating-list-item-rating">' . $rating . '</div>';
+                            echo '<div class="rating-details">';
+                            echo '<span class="tranding-rating-value">' . $rhymes . '</span>';
+                            echo '<span class="atmosphere-rating-value">' . $structure . '</span>';
+                            echo '<span class="base-rating-value">' . $rhymes . '</span>';
+                            echo '<span class="base-rating-value">' . $structure . '</span>';
+                            echo '<span class="base-rating-value">' . $realization . '</span>';
+                            echo '<span class="base-rating-value">' . $charisma . '</span>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                    }
+
+            // Закрытие соединения с базой данных
+            $db->close();
+        ?>
 
         </div>
     </section>

@@ -17,6 +17,14 @@ body {
   background-position: top left, bottom left;
 }
 
+main {
+  margin-top: 300px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
 .wrap {
   width: 100%;
   max-width: 1350px;
@@ -269,11 +277,17 @@ body {
   opacity: 0.35;
   font-size: 17px;
 }
-.item-artist a {
-  font-size: 17px;
+.item-artist p {
+  margin: 0;
+  margin-top: 5px;
+  font-size: 18px;
   opacity: 0.5;
   text-decoration: none;
   color: white;
+}
+
+.item-track {
+  font-size: 24px;
 }
 .item-artist-nickname {
   text-decoration: none;
