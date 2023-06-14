@@ -57,7 +57,8 @@
                                     $artists_names.= $artist['name'] . ', ';
                                 }
                             }
-                            $artists_names = mb_substr($artists_names, 0, strlen($artists_names) - 2);
+                            
+                            $artists_names = substr($artists_names, 0, strlen($artists_names) - 2);
                             $rating = $row['rating'];
                             $rhymes = $row['rhymes'];
                             $structure = $row['structure'];
@@ -74,7 +75,7 @@
                             echo '<div class="item-track-names">';
                             echo '<div class="item-track">' . $songName . '</div>';
                             echo '<div class="item-artist">';
-                            echo '<p href="/">' . $artists_names . '</p>';
+                            echo '<p>' . $artists_names . '</p>';
                             echo '</div>';
                             echo '</div>';
                             echo '<div class="rating-list-item-rating">' . $rating . '</div>';

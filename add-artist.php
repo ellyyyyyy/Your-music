@@ -37,7 +37,7 @@
             <h3>Имя артиста</h3>
                 <input class="artist-name" type="text" name="name" oninput="updatePreviewName(this.value)">
                 <h3>Аватар артиста</h3>
-                <input name="image" type="file" id="images" accept="image/*" required>
+                <input name="image" type="file" id="images" accept="images/jpg, images/png" required>
                 <button type="submit">Создать карточку артиста</button>
             </form>
 

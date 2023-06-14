@@ -60,11 +60,11 @@ if ($result && $result->num_rows > 0) {
 
     // Получение списка треков артиста из таблицы "songs" по идентификатору артиста
     $query = "SELECT songs.*, MAX(evaluations.rhymes) AS rhymes, MAX(evaluations.structure) AS structure, MAX(evaluations.realization) AS realization,
-              MAX(evaluations.charisma) AS charisma, MAX(evaluations.atmosphere) AS atmosphere, MAX(evaluations.trendiness) AS trendiness
-              FROM songs
-              INNER JOIN evaluations ON songs.id = evaluations.song
-              WHERE songs.artist_name = '$artistId'
-              GROUP BY songs.id";
+        MAX(evaluations.charisma) AS charisma, MAX(evaluations.atmosphere) AS atmosphere, MAX(evaluations.trendiness) AS trendiness
+        FROM songs
+        INNER JOIN evaluations ON songs.id = evaluations.song
+        WHERE FIND_IN_SET('$artistId', songs.artist_name) > 0
+        GROUP BY songs.id";
     $result = $db->query($query);
 
     if ($result && $result->num_rows > 0) {
@@ -78,6 +78,18 @@ if ($result && $result->num_rows > 0) {
             $trendiness = $song['trendiness'];
             $atmosphere = $song['atmosphere'];
             $rating = $song['result'];
+            $artistIds = explode(',', $song['artist_name']);
+
+            // Получение имен артистов на основе их идентификаторов
+            $artistNames = array();
+            foreach ($artistIds as $artistId) {
+                $artistQuery = "SELECT name FROM artists WHERE id = $artistId";
+                $artistResult = $db->query($artistQuery);
+                if ($artistResult && $artistResult->num_rows > 0) {
+                    $artistData = $artistResult->fetch_assoc();
+                    $artistNames[] = $artistData['name'];
+                }
+            }
 
             echo '<div class="wrap">';
             echo '<div class="rating-list-item rating-item-track">';
@@ -86,13 +98,19 @@ if ($result && $result->num_rows > 0) {
             echo '</div>';
             echo '<div class="item-track-names">';
             echo '<div class="item-track">' . $songName . '</div>';
+
+            // Вывод имен авторов трека
             echo '<div class="item-artist">';
-            echo '<p href="/"></p>';
+            $lastArtistIndex = count($artistNames) - 1;
+            foreach ($artistNames as $index => $artistName) {
+                echo '<p>' . $artistName . ($index !== $lastArtistIndex ? ',' : '') . '</p>' . '  ‌‌‍‍';              
+            }
             echo '</div>';
+
             echo '</div>';
             echo '<div class="rating-list-item-rating">' . $rating . '</div>';
             echo '<div class="rating-details">';
-            echo '<span class="tranding-rating-value">' . $trendiness . '</span>';
+            echo '<span class="trending-rating-value">' . $trendiness . '</span>';
             echo '<span class="atmosphere-rating-value">' . $atmosphere . '</span>';
             echo '<span class="base-rating-value">' . $rhymes . '</span>';
             echo '<span class="base-rating-value">' . $structure . '</span>';
@@ -101,18 +119,19 @@ if ($result && $result->num_rows > 0) {
             echo '</div>';
             echo '</div>';
             echo '</div>';
-            }
-            echo '</div>';
-            } else {
-            echo 'Нет доступных треков для данного артиста.';
-            }
-            } else {
-            echo 'Артист не найден.';
-            }
+        }
+        echo '</div>';
+    } else {
+        echo 'Нет доступных треков для данного артиста.';
+    }
+} else {
+    echo 'Артист не найден.';
+}
 
-            // Закрытие соединения с базой данных
-            $db->close();
-            ?>
+// Закрытие соединения с базой данных
+$db->close();
+?>
+
     </main>
 </body>
 

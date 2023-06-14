@@ -58,13 +58,16 @@
                 
             </select>
             <h3>Обложка трека</h3>
-            <input name="image" type="file" id="images" accept="image/*" required>
+            <input name="image" type="file" id="images" accept="images/jpg, images/png" required>
             <h3>Дата релиза</h3>
             <input type="date" id="releaseDate" name="releaseDate">
+            <div class="submit-wrap">
             <div id="result">
               <span id="averageRating">30</span>
             </div>
-            <input type="submit" value="Отправить">
+            <p>/90</p>
+            <input type="submit" value="Оценить">
+            </div>
           </div>
           <div class="slider-container">
             <label for="slider1">Ритмика</label>
