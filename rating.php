@@ -23,8 +23,9 @@
         </div>
     </header>
     <main>
+    <div class="wrap">
+    <h1>Рейтинг</h1>
     <section class="rating-list">
-        <div class="wrap">
         <?php
             // Подключение к базе данных
             include 'backend/connect.php';
@@ -78,8 +79,8 @@
                             echo '</div>';
                             echo '<div class="rating-list-item-rating">' . $rating . '</div>';
                             echo '<div class="rating-details">';
-                            echo '<span class="tranding-rating-value">' . $rhymes . '</span>';
-                            echo '<span class="atmosphere-rating-value">' . $structure . '</span>';
+                            echo '<span class="tranding-rating-value">' . $trendiness . '</span>';
+                            echo '<span class="atmosphere-rating-value">' . $atmosphere . '</span>';
                             echo '<span class="base-rating-value">' . $rhymes . '</span>';
                             echo '<span class="base-rating-value">' . $structure . '</span>';
                             echo '<span class="base-rating-value">' . $realization . '</span>';

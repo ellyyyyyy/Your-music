@@ -23,8 +23,9 @@
         </div>
     </header>
     <main>
+    <div class="wrap">
+    <h1>Артисты</h1>
         <section class="artists-list">
-            <div class="wrap">
                     <div class="home-artists-section-grid">
                     <?php
                     // Подключение к базе данных
