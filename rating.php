@@ -25,19 +25,59 @@
     <main>
     <div class="wrap">
     <h1>Рейтинг</h1>
+    <div class="filter-buttons">
+    <a class="filter-button" data-year="2021">2021</a>
+    <a class="filter-button" data-year="2022">2022</a>
+    <a class="filter-button" data-year="2023" data-default="true">2023</a>
+</div>
+    <div class="sort-container">
+            <a class="reset-filters-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                </svg>
+            </a>
+            <!-- Добавляем кнопки сортировки -->
+            <div class="sort-buttons">
+                <a class="sort-button asc">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-sort-down-alt" viewBox="0 0 16 16">
+                        <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/>
+                    </svg>
+                </a>
+                <a class="sort-button desc">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                        <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+                    </svg>
+                </a>
+            </div>
+            <!-- Добавляем кнопку сброса фильтров -->
+        </div>
     <section class="rating-list">
         <?php
             // Подключение к базе данных
             include 'backend/connect.php';
             $db = new mysqli($host, $user, $passw, $db_name);
 
-            // Запрос для получения оцененных песен
+            // Получение значения сортировки из GET-параметров
+            $sort = isset($_GET['sort']) ? $_GET['sort'] : 'asc';
+            
+            $year = isset($_GET['year']) ? $_GET['year'] : '';
+
+            // Формирование условия WHERE для фильтрации по году
+            $whereClause = '';
+            if (!empty($year)) {
+                $startYear = $year;
+                $endYear = intval($year) + 1;
+                $whereClause = "WHERE songs.date >= '$startYear-01-01' AND songs.date < '$endYear-01-01'";
+            }
+
+            // Запрос для получения оцененных песен с сортировкой и фильтрацией
             $query = "SELECT songs.artist_name AS artist_name, songs.name AS song_name, songs.result AS rating,
-                    MAX(evaluations.rhymes) AS rhymes, MAX(evaluations.structure) AS structure, MAX(evaluations.realization) AS realization,
-                    MAX(evaluations.charisma) AS charisma, MAX(evaluations.atmosphere) AS atmosphere, MAX(evaluations.trendiness) AS trendiness
-                    FROM songs
-                    INNER JOIN evaluations ON songs.id = evaluations.song
-                    GROUP BY songs.id";
+                        MAX(evaluations.rhymes) AS rhymes, MAX(evaluations.structure) AS structure, MAX(evaluations.realization) AS realization,
+                        MAX(evaluations.charisma) AS charisma, MAX(evaluations.atmosphere) AS atmosphere, MAX(evaluations.trendiness) AS trendiness
+                        FROM songs
+                        INNER JOIN evaluations ON songs.id = evaluations.song
+                        $whereClause
+                        GROUP BY songs.id";
 
                     $result = $db->query($query);
 
@@ -100,4 +140,96 @@
     </main>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+<script>
+
+    $(document).ready(function() {
+        var originalItems; // Переменная для хранения исходного порядка элементов
+
+        // Обработчик клика по кнопке сортировки
+        $('.sort-button').click(function() {
+            var sortType = $(this).hasClass('asc') ? 'asc' : 'desc';
+
+            // Удаляем активный класс со всех кнопок сортировки
+            $('.sort-button').removeClass('active');
+
+            // Добавляем активный класс на текущую кнопку сортировки
+            $(this).addClass('active');
+
+            // Вызываем функцию для сортировки результатов
+            sortResults(sortType);
+        });
+
+        // Обработчик клика по кнопке "Сбросить фильтры"
+        $(".reset-filters-button").click(function() {
+            // Удаляем активный класс со всех кнопок сортировки
+            $('.sort-button').removeClass('active');
+
+            // Плавно скрываем текущие элементы
+            $('.rating-list').fadeOut(300, function() {
+                // Восстанавливаем исходный порядок элементов
+                $(this).empty().append(originalItems.clone());
+
+                // Плавно отображаем восстановленные элементы
+                $(this).fadeIn(100);
+
+                // Плавно скрываем кнопку "Сбросить фильтры"
+                $(".reset-filters-button").fadeOut(300);
+            });
+        });
+
+        // Функция для сортировки результатов
+        function sortResults(sortType) {
+            // Получаем список элементов
+            var items = $('.rating-list-item');
+
+            // Если исходный порядок еще не сохранен, сохраняем его
+            if (!originalItems) {
+                originalItems = items.clone();
+            }
+
+            // Клонируем элементы для сортировки
+            var sortedItems = items.clone();
+
+            // Сортируем элементы в соответствии с выбранным типом сортировки
+            sortedItems.sort(function(a, b) {
+                var ratingA = parseInt($(a).find('.rating-list-item-rating').text());
+                var ratingB = parseInt($(b).find('.rating-list-item-rating').text());
+
+                if (sortType === 'asc') {
+                    return ratingA - ratingB;
+                } else {
+                    return ratingB - ratingA;
+                }
+            });
+
+            // Заменяем текущий список элементов отсортированным списком
+            $('.rating-list').fadeOut(300, function() {
+                $(this).empty().append(sortedItems).fadeIn(100);
+            });
+
+            // Плавно показываем кнопку "Сбросить фильтры"
+            $(".reset-filters-button").fadeIn(300);
+        }
+
+        // Скрываем кнопку "Сбросить фильтры" при загрузке страницы
+        $(".reset-filters-button").hide();
+    });
+
+
+    $(document).ready(function() {
+    // Обработчик клика по кнопкам фильтрации
+    $('.filter-button').click(function() {
+        var year = $(this).data('year');
+
+        // Удаляем класс "active" со всех кнопок фильтрации
+        $('.filter-button').removeClass('active');
+
+        // Добавляем класс "active" на нажатую кнопку
+        $(this).addClass('active');
+
+        // Перезагрузка страницы с выбранным годом в GET-параметрах
+        window.location.href = window.location.pathname + '?year=' + year;
+    });
+});
+</script>
 </html>
