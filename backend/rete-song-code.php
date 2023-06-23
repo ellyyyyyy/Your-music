@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $atmospherePercentage = $atmosphere * 10;
     $trendinessPercentage = $trendiness * 10;
     $songName = isset($_POST['song']) ? $_POST['song'] : '';
-    $releaseDate = isset($_POST['releaseDate']) ? $_POST['releaseDate'] : '';
+    $releaseDate = date('Y-m-d');
 
     // Вставка данных в таблицу "artists" и получение идентификаторов авторов
     $artistIds = [];

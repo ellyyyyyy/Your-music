@@ -1,3 +1,25 @@
+<?php
+session_start();
+
+// Проверка аутентификации
+if (!isset($_SESSION['user_id'])) {
+    // Перенаправление на страницу входа
+    header('Location: backend/login.php');
+    exit();
+}
+
+// Проверка уровня доступа пользователя
+$role = $_SESSION['role'];
+
+if ($role !== 'admin' && $role !== 'junior_admin') {
+    // Перенаправление на страницу с сообщением о недостаточных правах доступа
+    header('Location: backend/unauthorized.php');
+    exit();
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,9 +38,26 @@
                 <ul class="header-menu">
                     <li><a href="/rating.php"><span>Рейтинг</span> </a></li>
                     <li><a href="/artists.php"><span>Артисты</span> </a></li>
+                    <?php
+                        $role = $_SESSION['role'];
+                        if ($role == 'admin') {
+                    ?>
                     <li><a href="/add-artist.php"><span>Добавить артиста</span> </a></li>
                     <li><a href="/rate-song.php"><span>Оценить трек</span> </a></li>
+                    <?php
+                    }
+                    else {
+                    ?>
+                    <style>
+                        .header-menu {
+                        grid-template-columns: 1fr 1fr;
+                        }
+                    </style>
+                    <?php
+                    }
+                    ?>
                 </ul>
+                <a class="logout" href="backend/logout.php"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="logout"><path d="M4,12a1,1,0,0,0,1,1h7.59l-2.3,2.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l4-4a1,1,0,0,0,.21-.33,1,1,0,0,0,0-.76,1,1,0,0,0-.21-.33l-4-4a1,1,0,1,0-1.42,1.42L12.59,11H5A1,1,0,0,0,4,12ZM17,2H7A3,3,0,0,0,4,5V8A1,1,0,0,0,6,8V5A1,1,0,0,1,7,4H17a1,1,0,0,1,1,1V19a1,1,0,0,1-1,1H7a1,1,0,0,1-1-1V16a1,1,0,0,0-2,0v3a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V5A3,3,0,0,0,17,2Z"></path></svg></a>
             </div>
         </div>
     </header>
@@ -39,13 +78,13 @@
             <!-- Добавляем кнопки сортировки -->
             <div class="sort-buttons">
                 <a class="sort-button asc">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-sort-down-alt" viewBox="0 0 16 16">
-                        <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                        <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
                     </svg>
                 </a>
                 <a class="sort-button desc">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-                        <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-sort-down-alt" viewBox="0 0 16 16">
+                        <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/>
                     </svg>
                 </a>
             </div>
@@ -118,7 +157,12 @@
                             echo '<p>' . $artists_names . '</p>';
                             echo '</div>';
                             echo '</div>';
-                            echo '<div class="rating-list-item-rating">' . $rating . '</div>';
+
+                            $ratingClass = ($rating == 90) ? 'gold' : '';
+                            echo '<div class="rating-list-item-rating">';
+                            echo '<span class="' . $ratingClass . '">' . $rating . '</span>';
+                            echo '</div>';
+
                             echo '<div class="rating-details">';
                             echo '<span class="tranding-rating-value">' . $trendiness . '</span>';
                             echo '<span class="atmosphere-rating-value">' . $atmosphere . '</span>';
@@ -232,4 +276,5 @@
     });
 });
 </script>
+<script src="js/scripts.js"></script>
 </html>
